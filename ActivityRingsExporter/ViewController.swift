@@ -64,6 +64,9 @@ class ViewController: UIViewController {
                         return
                     }
                     
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd"
+
                     let exportArray = summaries.map({ (summary) -> ActivitySummary in
                         let activity = summary.activeEnergyBurned.doubleValue(for: HKUnit.kilocalorie())
                         let activityGoal = summary.activeEnergyBurnedGoal.doubleValue(for: HKUnit.kilocalorie())
@@ -89,7 +92,7 @@ class ViewController: UIViewController {
                             }
                         }
                         
-                        let sum = ActivitySummary(move: activity, moveGoal: activityGoal, exercise: exercise, exerciseGoal: exerciseGoal, stand: stand, standGoal: standGoal, date: date)
+                        let sum = ActivitySummary(move: activity, moveGoal: activityGoal, exercise: exercise, exerciseGoal: exerciseGoal, stand: stand, standGoal: standGoal, date: formatter.string(from: date))
                         return sum
                     })
                     
@@ -139,5 +142,5 @@ struct ActivitySummary: Codable {
     let stand: Double
     let standGoal: Double
     
-    let date: Date
+    let date: String
 }

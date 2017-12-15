@@ -74,7 +74,22 @@ class ViewController: UIViewController {
                         let stand = summary.appleStandHours.doubleValue(for: HKUnit.count())
                         let standGoal = summary.appleStandHoursGoal.doubleValue(for: HKUnit.count())
                         
-                        let sum = ActivitySummary(move: activity, moveGoal: activityGoal, exercise: exercise, exerciseGoal: exerciseGoal, stand: stand, standGoal: standGoal)
+                        var date: Date!
+                        if let d = summary.dateComponents(for: calendar).date {
+                            date = d
+                        } else {
+                            date = Date(timeIntervalSince1970: 0)
+                            DispatchQueue.main.async {
+                                let alert = UIAlertController(title: "HealthKit Error", message: "No date present on record. Will use 0", preferredStyle: .alert)
+                                
+                                let button = UIAlertAction(title: "OK", style: .default, handler: nil)
+                                alert.addAction(button)
+                                
+                                self.present(alert, animated: true, completion: nil)
+                            }
+                        }
+                        
+                        let sum = ActivitySummary(move: activity, moveGoal: activityGoal, exercise: exercise, exerciseGoal: exerciseGoal, stand: stand, standGoal: standGoal, date: date)
                         return sum
                     })
                     
@@ -123,4 +138,6 @@ struct ActivitySummary: Codable {
     
     let stand: Double
     let standGoal: Double
+    
+    let date: Date
 }
